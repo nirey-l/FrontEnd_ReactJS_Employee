@@ -6,35 +6,23 @@ const API_BASE_URL = 'http://localhost:8080/api';
 // ===============
 // DOM 요소 캐싱
 // ===============
-//<form id="dept-form">
 const deptForm = document.getElementById('dept-form');
-//<input id="dept-id">
 const deptIdInput = document.getElementById('dept-id');
-//<input id="dept-name">
 const deptNameInput = document.getElementById('dept-name');
-//<input id="dept-desc">
 const deptDescInput = document.getElementById('dept-desc');
-//<h3 id="dept-form-title">
 const deptFormTitle = document.getElementById('dept-form-title');
-//<button type="submit" id="dept-submit-btn">
 const deptSubmitBtn = document.getElementById('dept-submit-btn');
-//<button type="button" id="dept-cancel-btn"
 const deptCancelBtn = document.getElementById('dept-cancel-btn');
-//<input type="number" id="search-dept-id">
-const searchDeptIdInput = document.getElementById('search-dept-id');
-//<button type="button" class="btn btn-success">조회
+
+const searchDeptIdSelect = document.getElementById('search-dept-id');
 const searchDeptBtn = document.querySelector('#dept-section .card:nth-child(2) .btn-success');
-//<div id="dept-detail-result">
 const deptDetailResult = document.getElementById('dept-detail-result');
-//<tbody id="dept-list">
+
 const deptListBody = document.getElementById('dept-list');
-//<div class="loading" id="dept-loading">
 const deptLoading = document.getElementById('dept-loading');
-//<button class="btn btn-info">새로고침
 const refreshBtn = document.querySelector('#dept-section .list-header .btn-info');
-//<div id="alert-success">성공메시지
+
 const alertSuccess = document.getElementById('alert-success');
-//<div id="alert-error">오류메시지
 const alertError = document.getElementById('alert-error');
 
 // =================
@@ -161,11 +149,10 @@ async function deleteDepartment(id) {
 function renderDepartmentList(departments) {
     deptListBody.innerHTML = ''; // 기존 목록 초기화
     if (!departments || departments.length === 0) {
-        deptListBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">부서정보가 없습니다.</td></tr>';
+        deptListBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">표시할 부서가 없습니다.</td></tr>';
         return;
     }
     departments.forEach(dept => {
-        //<tr> 엘리먼트 생성
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${dept.id}</td>
@@ -178,7 +165,6 @@ function renderDepartmentList(departments) {
         `;
         // '수정'과 '삭제' 버튼에 대한 원본 데이터를 저장
         row.querySelector('[data-action="edit"]').dataset.department = JSON.stringify(dept);
-        //<tr> 엘리먼트를 <tbody>에 추가
         deptListBody.appendChild(row);
     });
 }
@@ -284,10 +270,25 @@ function handleApiError(error) {
  * 페이지 로드 시 부서 목록을 가져와 렌더링합니다.
  */
 async function loadAndRenderDepartments() {
-    //departments 는 서버에 가져온 Json 
     const departments = await fetchAllDepartments();
-    //서버에 가져온 Json 데이터를 <tbody>아래에 <tr>엘리먼트를 동적으로 렌더링
     renderDepartmentList(departments);
+    populateSearchDepartmentDropdown(departments); // 부서 조회 드롭다운도 함께 갱신
+}
+
+/**
+ * 부서 목록으로 조회용 select 드롭다운을 채웁니다.
+ * @param {Array<object>} departments - 부서 데이터 배열
+ */
+function populateSearchDepartmentDropdown(departments) {
+    searchDeptIdSelect.innerHTML = '<option value="">조회할 부서를 선택하세요...</option>';
+    if (departments && departments.length > 0) {
+        departments.forEach(dept => {
+            const option = document.createElement('option');
+            option.value = dept.id;
+            option.textContent = `${dept.departmentName} (ID: ${dept.id})`;
+            searchDeptIdSelect.appendChild(option);
+        });
+    }
 }
 
 /**
@@ -295,7 +296,6 @@ async function loadAndRenderDepartments() {
  * @param {Event} e - 폼 제출 이벤트
  */
 async function handleFormSubmit(e) {
-    //submit 이벤트가 처리 되지 않도록 
     e.preventDefault();
     const id = deptIdInput.value;
     const departmentData = {
@@ -322,14 +322,12 @@ async function handleFormSubmit(e) {
  * ID로 부서 조회 버튼 클릭 이벤트를 처리합니다.
  */
 async function handleSearchById() {
-    const id = searchDeptIdInput.value;
+    const id = searchDeptIdSelect.value;
     if (!id) {
         showMessage('조회할 부서 ID를 입력해주세요.', true);
         return;
     }
-    //id로 fetch()함수 ajax 통신
     const department = await fetchDepartmentById(id);
-    //json 데이터를 렌더링
     renderDepartmentDetail(department);
 }
 
@@ -338,7 +336,6 @@ async function handleSearchById() {
  * @param {Event} e - 클릭 이벤트
  */
 function handleListClick(e) {
-    //e.target : 수정 또는 삭제 버튼
     const target = e.target;
     const action = target.dataset.action;
     const id = target.dataset.id;
@@ -358,12 +355,10 @@ function handleListClick(e) {
 // ==================
 // 이벤트 리스너 연결
 // ==================
-//DOMContentLoaded 라는 이벤트를 처리한다
 document.addEventListener('DOMContentLoaded', () => {
     loadAndRenderDepartments(); // 페이지가 로드되면 바로 목록 조회
 
     deptForm.addEventListener('submit', handleFormSubmit);
-    //onclick="showTab('dept-section')
     searchDeptBtn.addEventListener('click', handleSearchById);
     deptListBody.addEventListener('click', handleListClick);
     deptCancelBtn.addEventListener('click', resetForm);

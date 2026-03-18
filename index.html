@@ -52,7 +52,10 @@
             <div class="card">
                 <h3>부서 조회 (ID)</h3>
                 <div class="form-inline">
-                    <input type="number" id="search-dept-id" placeholder="부서 ID 입력" min="1">
+                    <select id="search-dept-id" required>
+                        <option value="">조회할 부서를 선택하세요...</option>
+                        <!-- JavaScript를 통해 부서 목록이 채워집니다. -->
+                    </select>
                     <button type="button" class="btn btn-success">조회</button>
                 </div>
                 <div id="dept-detail-result" style="margin-top: 15px; display: none;">
@@ -125,8 +128,11 @@
                             <input type="email" id="emp-email" placeholder="예: john.doe@example.com" required>
                         </div>
                         <div class="form-group">
-                            <label for="emp-dept-id">부서 ID</label>
-                            <input type="number" id="emp-dept-id" placeholder="예: 1" min="1" required>
+                            <label for="emp-dept-id">부서</label>
+                            <select id="emp-dept-id" required>
+                                <option value="">부서를 선택하세요...</option>
+                                <!-- JavaScript를 통해 부서 목록이 채워집니다. -->
+                            </select>
                         </div>
                     </div>
                     <button type="submit" id="emp-submit-btn" class="btn btn-primary">직원 생성</button>
@@ -186,13 +192,29 @@
     <!-- <script src="app.js"></script> -->
     <script>
         // 탭 전환 로직 (HTML/CSS 구조 확인용 간단한 스크립트)
+        /*
         function showTab(sectionId) {
             document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
             document.getElementById(sectionId).classList.add('active');
             event.currentTarget.classList.add('active');
         }
+        */
+        function showTab(sectionId) {
+            // 모든 탭 컨텐츠 숨기기 및 탭 비활성화
+            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                // 클릭된 탭 활성화
+                document.getElementById(sectionId).classList.add('active');
+                event.currentTarget.classList.add('active');
+
+            // '직원 관리' 탭을 처음 클릭했을 때, 관련 JS 함수들을 초기화합니다.
+            if (sectionId === 'emp-section') {
+                initEmployeeTab();
+            }
+        }
     </script>
     <script src="js/department.js"></script>
+    <script src="js/employee.js"></script>
 </body>
 </html>
