@@ -101,17 +101,89 @@
             </div>
         </section>
 
-        <!-- 직원 관리 섹션 (다음 단계 구현용) -->
+        <!-- 직원 관리 섹션 (P1-2 구현 영역) -->
         <section id="emp-section" class="content-section">
+            
+            <!-- 직원 생성/수정 폼 -->
             <div class="card">
-                <h3>직원 관리 서비스 준비 중...</h3>
-                <p>부서 관리 기능을 먼저 완료한 후 구현될 예정입니다.</p>
+                <h3 id="emp-form-title">직원 등록</h3>
+                <form id="emp-form">
+                    <input type="hidden" id="emp-id"> <!-- 수정 시 ID 보관용 -->
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="emp-firstname">이름 (First Name)</label>
+                            <input type="text" id="emp-firstname" placeholder="예: John" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emp-lastname">성 (Last Name)</label>
+                            <input type="text" id="emp-lastname" placeholder="예: Doe" required>
+                        </div>
+                    </div>
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="emp-email">이메일</label>
+                            <input type="email" id="emp-email" placeholder="예: john.doe@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="emp-dept-id">부서 ID</label>
+                            <input type="number" id="emp-dept-id" placeholder="예: 1" min="1" required>
+                        </div>
+                    </div>
+                    <button type="submit" id="emp-submit-btn" class="btn btn-primary">직원 생성</button>
+                    <button type="button" id="emp-cancel-btn" class="btn btn-info" style="display:none;">취소</button>
+                </form>
+            </div>
+
+            <!-- 직원 단건 조회 -->
+            <div class="card">
+                <h3>직원 조회</h3>
+                <div class="form-inline">
+                    <input type="number" id="search-emp-id" placeholder="ID로 조회" min="1">
+                    <button type="button" class="btn btn-success">ID로 조회</button>
+                </div>
+                <div class="form-inline" style="margin-top: 15px;">
+                    <input type="email" id="search-emp-email" placeholder="이메일로 조회">
+                    <button type="button" class="btn btn-success">이메일로 조회</button>
+                </div>
+                <div id="emp-detail-result" style="margin-top: 15px; display: none;">
+                    <!-- 조회 결과가 여기에 표시됨 -->
+                </div>
+            </div>
+
+            <!-- 직원 목록 -->
+            <div class="card">
+                <div class="list-header">
+                    <h3>전체 직원 목록</h3>
+                    <div>
+                        <button class="btn btn-secondary" title="직원과 부서 정보를 함께 조회합니다.">직원+부서 조회</button>
+                        <button class="btn btn-info">새로고침</button>
+                    </div>
+                </div>
+                <div class="loading" id="emp-loading">데이터를 불러오는 중...</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>이름</th>
+                            <th>성</th>
+                            <th>이메일</th>
+                            <th>부서 ID</th>
+                            <th>작업</th>
+                        </tr>
+                    </thead>
+                    <tbody id="emp-list">
+                        <!-- API 데이터가 여기에 렌더링됨 -->
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #999;">직원 데이터를 불러오세요.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </section>
     </div>
 
     <!-- 나중에 기능 구현을 위한 JS 파일 링크 (지금은 비워둠) -->
-    <script src="js/department.js"></script>
+    <!-- <script src="app.js"></script> -->
     <script>
         // 탭 전환 로직 (HTML/CSS 구조 확인용 간단한 스크립트)
         function showTab(sectionId) {
@@ -121,5 +193,6 @@
             event.currentTarget.classList.add('active');
         }
     </script>
+    <script src="js/department.js"></script>
 </body>
 </html>
