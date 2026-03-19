@@ -188,33 +188,40 @@
         </section>
     </div>
 
-    <!-- 나중에 기능 구현을 위한 JS 파일 링크 (지금은 비워둠) -->
-    <!-- <script src="app.js"></script> -->
+    <!-- ================================================== -->
+    <!-- [v2.0] ES Module 방식으로 변경된 스크립트 로딩      -->
+    <!--                                                    -->
+    <!-- 변경 전 (v1.0):                                    -->
+    <!--   <script src="department.js"></script>  ← 일반 스크립트 -->
+    <!--                                                    -->
+    <!-- 변경 후 (v2.0):                                    -->
+    <!--   type="module" 필수! (import/export 사용을 위해)  -->
+    <!--   파일 경로: js/dept_runner_v1.js                  -->
+    <!--   └─ import departmentApi.js (버전 1 함수형)       -->
+    <!--   └─ import utils.js                              -->
+    <!-- ================================================== -->
+
+    <!-- 탭 전환 스크립트 (일반 스크립트 - 전역 함수로 유지) -->
     <script>
-        // 탭 전환 로직 (HTML/CSS 구조 확인용 간단한 스크립트)
-        /*
         function showTab(sectionId) {
+            // 모든 탭 컨텐츠 숨기기 및 탭 버튼 비활성화
             document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
             document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            // 클릭된 탭 활성화
             document.getElementById(sectionId).classList.add('active');
             event.currentTarget.classList.add('active');
-        }
-        */
-        function showTab(sectionId) {
-            // 모든 탭 컨텐츠 숨기기 및 탭 비활성화
-            document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                // 클릭된 탭 활성화
-                document.getElementById(sectionId).classList.add('active');
-                event.currentTarget.classList.add('active');
 
-            // '직원 관리' 탭을 처음 클릭했을 때, 관련 JS 함수들을 초기화합니다.
+            // '직원 관리' 탭을 처음 클릭했을 때 초기화
             if (sectionId === 'emp-section') {
-                initEmployeeTab();
+                if (typeof initEmployeeTab === 'function') initEmployeeTab();
             }
         }
     </script>
-    <script src="js/department.js"></script>
+
+    <!-- [v2.0] 부서 관리: ES Module 방식 (departmentApi.js 버전 1 함수형 사용) -->
+    <script type="module" src="js/dept_runner_v1.js"></script>
+
+    <!-- 직원 관리: 기존 v1.0 스크립트 유지 (추후 v2.0으로 교체 예정) -->
     <script src="js/employee.js"></script>
 </body>
 </html>
